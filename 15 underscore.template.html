@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <ul>
+<!--        <li>我叫 <span>小明</span>，是传智播客的学生，今年 <span>18</span> 岁了。</li>
+        <li>我叫 <span>小明1</span>，是传智播客的学生，今年 <span>17</span> 岁了。</li>
+        <li>我叫 <span>小明2</span>，是传智播客的学生，今年 <span>16</span> 岁了。</li>
+        <li>我叫 <span>小明3</span>，是传智播客的学生，今年 <span>15</span> 岁了。</li>-->
+    </ul>
+    <!-- 传统的拼接方式 -->
+    <!--<script>
+        window.onload = function(){
+            /*1.准备数据*/
+            var data = [
+                {name:'小明',age:18},
+                {name:'小明1',age:17},
+                {name:'小明2',age:16},
+                {name:'小明3',age:15},
+                {name:'小明4',age:14}
+            ]
+            /*2.把数据转换成html格式的字符串*/
+            var html = '';
+            for(var i = 0 ; i < data.length ; i ++){
+                html +='<li>我叫 <span>'+data[i].name+'</span>，是传智播客的学生，今年 <span>'+data[i].age+'</span> 岁了。</li>';
+            }
+
+            console.log(html);
+
+            /*渲染*/
+            document.querySelector('ul').innerHTML = html;
+        }
+    </script>-->
+
+    <!--模版引擎方式-->
+    <!--申明一个模版  当中字符串解析不会显示在html页面当中-->
+    <!--固定语法-->
+    <!--可以使用js语法  但是 用  <% 仅书写js代码 %>-->
+    <!-- 显示数据当中的属性  显示数据 -->
+    <!--
+    恶意脚本攻击 <script>alert(\'神经病\');<\/script> <%-item.name  %>
+    XSS
+    -->
+    <!--
+    <%=item.name  %> 渲染html标签
+    <%-item.name  %> 当作字符串解析
+    -->
+    <script type="text/template" id="template">
+        <% $.each(model,function(index,item){ %>
+            <li>我叫 <span><%-item.name  %></span>，是传智播客的学生，今年 <span><%=item.age%></span> 岁了。</li>
+        <% }); %>
+    </script>
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/underscore/underscore-min.js"></script>
+    <script>
+        window.onload = function(){
+            /* $ 调用函数 */
+            /* _ 调用函数 */
+            /*1.准备数据*/
+            var data = [
+                {name:'<script>alert(\'神经病\');<\/script>',age:18},
+                {name:'小明1',age:17},
+                {name:'小明2',age:16},
+                {name:'小明3',age:15},
+                {name:'小明4',age:14}
+            ];
+
+            /* 第一个参数  item  第二参数是 index*/
+            /*_.each(data,function(item,index){
+                console.log(item.name);
+            });*/
+
+            /*2.把数据转换成html格式的字符串*/
+
+            /*2.1 准备模版*/
+            /*2.2 调用template方法  传入模版当中的字符串  执行玩之后返回的是  一个模版函数*/
+            var templateFuc = _.template($('#template').html());
+            /*2.3 调用这个函数  传入对象形式的数据  返回的就是html格式的字符串*/
+            var html = templateFuc({model:data});
+            /*渲染*/
+            $('ul').html(html);
+        }
+    </script>
+
+</body>
+</html>
